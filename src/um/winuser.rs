@@ -23,7 +23,9 @@ use shared::windef::{
 };
 use um::minwinbase::LPSECURITY_ATTRIBUTES;
 use um::wingdi::{
-    BLENDFUNCTION, DEVMODEA, DEVMODEW, LOGFONTA, LOGFONTW, PDISPLAY_DEVICEA, PDISPLAY_DEVICEW
+    BLENDFUNCTION, DEVMODEA, DEVMODEW, DISPLAYCONFIG_DEVICE_INFO_HEADER, DISPLAYCONFIG_MODE_INFO,
+    DISPLAYCONFIG_PATH_INFO, DISPLAYCONFIG_TOPOLOGY_ID, LOGFONTA, LOGFONTW, PDISPLAY_DEVICEA,
+    PDISPLAY_DEVICEW,
 };
 use um::winnt::{
     ACCESS_MASK, BOOLEAN, CHAR, HANDLE, LONG, LPCSTR, LPCWSTR, LPSTR, LPWSTR, LUID,
@@ -6444,6 +6446,34 @@ extern "system" {
     ) -> BOOL;
 }
 pub const EDD_GET_DEVICE_INTERFACE_NAME: DWORD = 0x00000001;
+extern "system" {
+    pub fn GetDisplayConfigBufferSizes(
+        flags: UINT32,
+        numPathArrayElements: *mut UINT32,
+        numModeInfoArrayElements: *mut UINT32,
+    ) -> LONG;
+    pub fn SetDisplayConfig(
+        numPathArrayElements: UINT32,
+        pathArray: *const DISPLAYCONFIG_PATH_INFO,
+        numModeInfoArrayElements: UINT32,
+        modeInfoArray: *const DISPLAYCONFIG_MODE_INFO,
+        flags: UINT32,
+    ) -> LONG;
+    pub fn QueryDisplayConfig(
+        flags: UINT32,
+        numPathArrayElements: *mut UINT32,
+        pathArray: *mut DISPLAYCONFIG_PATH_INFO,
+        numModeInfoArrayElements: *mut UINT32,
+        modeInfoArray: *mut DISPLAYCONFIG_MODE_INFO,
+        currentTopologyId: *mut DISPLAYCONFIG_TOPOLOGY_ID,
+    ) -> LONG;
+    pub fn DisplayConfigGetDeviceInfo(
+        requestPacket: *mut DISPLAYCONFIG_DEVICE_INFO_HEADER,
+    ) -> LONG;
+    pub fn DisplayConfigSetDeviceInfo(
+        setPacket: *const DISPLAYCONFIG_DEVICE_INFO_HEADER,
+    ) -> LONG;
+}
 extern "system" {
     pub fn SystemParametersInfoA(
         uiAction: UINT,
